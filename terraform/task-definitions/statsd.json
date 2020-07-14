@@ -1,0 +1,22 @@
+[
+  {
+    "name": "statsd",
+    "image": "statsd/statsd",
+    "essential": true,
+    "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+            "awslogs-create-group": "true",
+            "awslogs-group": "awslogs-fargate",
+            "awslogs-region": "eu-west-1",
+            "awslogs-stream-prefix": "awslogs-frontend"
+        }
+    },
+    "portMappings": [
+      {
+        "containerPort": 8125,
+        "protocol": "udp"
+      }
+    ]
+  }
+]
