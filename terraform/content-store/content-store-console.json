@@ -1,0 +1,79 @@
+[
+  {
+    "name": "content-store-console",
+    "image": "govuk/content-store-console:latest",
+    "essential": true,
+    "environment": [
+      { "name": "ERRBIT_ENVIRONMENT_NAME", "value": "test" },
+      { "name": "GOVUK_APP_DOMAIN", "value": "test.govuk-internal.digital" },
+      { "name": "GOVUK_APP_DOMAIN_EXTERNAL", "value": "test.publishing.service.gov.uk" },
+      { "name": "GOVUK_ASSET_ROOT", "value": "https://assets.test.publishing.service.gov.uk" },
+      { "name": "GOVUK_CSP_REPORT_ONLY", "value": "yes" },
+      { "name": "GOVUK_CSP_REPORT_URI", "value": "https://jhpno0hk6b.execute-api.eu-west-2.amazonaws.com/production" },
+      { "name": "GOVUK_ENV", "value": "production" },
+      { "name": "GOVUK_WEBSITE_ROOT", "value": "https://www.test.publishing.service.gov.uk" },
+      { "name": "RACK_ENV", "value": "production" },
+      { "name": "RAILS_ENV", "value": "production" },
+      { "name": "SENTRY_CURRENT_ENV", "value": "test" },
+
+      { "name": "DEFAULT_TTL", "value": "1800" },
+      { "name": "GOVUK_APP_LOGROOT", "value": "/var/log/content-store" },
+      { "name": "GOVUK_APP_NAME", "value": "content-store" },
+      { "name": "GOVUK_APP_ROOT", "value": "/var/apps/content-store" },
+      { "name": "GOVUK_APP_RUN", "value": "/var/run/content-store" },
+      { "name": "GOVUK_APP_TYPE", "value": "rack" },
+      { "name": "GOVUK_GROUP", "value": "deploy" },
+      { "name": "GOVUK_STATSD_PREFIX", "value": "fargate" },
+      { "name": "GOVUK_USER", "value": "deploy" },
+      { "name": "MONGODB_URI", "value": "mongodb://mongo-1.test.govuk-internal.digital,mongo-2.test.govuk-internal.digital,mongo-3.test.govuk-internal.digital/content_store_production" },
+      { "name": "PLEK_SERVICE_PERFORMANCEPLATFORM_BIG_SCREEN_VIEW_URI", "value": "" },
+      { "name": "PLEK_SERVICE_RUMMAGER_URI", "value": "" },
+      { "name": "PLEK_SERVICE_SPOTLIGHT_URI", "value": "" },
+      { "name": "UNICORN_WORKER_PROCESSES", "value": "12" },
+
+      { "name": "STATSD_HOST", "value": "statsd.test.govuk-internal.digital" },
+      { "name": "STATSD_PROTOCOL", "value": "tcp" }
+    ],
+    "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+            "awslogs-create-group": "true",
+            "awslogs-group": "awslogs-fargate",
+            "awslogs-region": "eu-west-1",
+            "awslogs-stream-prefix": "awslogs-content-store"
+        }
+    },
+    "portMappings": [
+      {
+        "containerPort": 22,
+        "protocol": "tcp"
+      }
+    ],
+    "secrets": [
+      {
+        "name": "SECRET_KEY_BASE",
+        "valueFrom": "arn:aws:secretsmanager:eu-west-1:430354129336:secret:content-store_app-SECRET_KEY_BASE-g7DQtv"
+      },
+      {
+        "name": "OAUTH_ID",
+        "valueFrom": "arn:aws:secretsmanager:eu-west-1:430354129336:secret:content-store_app-OAUTH_ID-Ynr21Z"
+      },
+      {
+        "name": "OAUTH_SECRET",
+        "valueFrom": "arn:aws:secretsmanager:eu-west-1:430354129336:secret:content-store_app-OAUTH_SECRET-7AlZf2"
+      },
+      {
+        "name": "PUBLISHING_API_BEARER_TOKEN",
+        "valueFrom": "arn:aws:secretsmanager:eu-west-1:430354129336:secret:content-store_app-PUBLISHING_API_BEARER_TOKEN-tQ8GbK"
+      },
+      {
+        "name": "ROUTER_API_BEARER_TOKEN",
+        "valueFrom": "arn:aws:secretsmanager:eu-west-1:430354129336:secret:content-store_app-ROUTER_API_BEARER_TOKEN-kdjuAL"
+      },
+      {
+        "name": "SENTRY_DSN",
+        "valueFrom": "arn:aws:secretsmanager:eu-west-1:430354129336:secret:content-store_app-SENTRY_DSN-mMbNh2"
+      }
+    ]
+  }
+]
