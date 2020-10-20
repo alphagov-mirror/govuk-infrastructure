@@ -37,6 +37,8 @@ module "govuk" {
   mongodb_host                  = "mongo-1.test.govuk-internal.digital,mongo-2.test.govuk-internal.digital,mongo-3.test.govuk-internal.digital"
   redis_host                    = "pink-backend-redis.0f3erf.ng.0001.euw1.cache.amazonaws.com"
   statsd_host                   = "statsd.test.govuk-internal.digital"
+  signon_db_url                 = "mysql2://root:root@mysql-primary.test.govuk-internal.digital/signon"
+  signon_test_db_url            = "mysql2://root:root@mysql-primary.test.govuk-internal.digital/signon_test"
   govuk_management_access_sg_id = data.aws_security_group.govuk_management_access.id
   documentdb_security_group_id  = data.aws_security_group.documentdb.id
   redis_security_group_id       = data.aws_security_group.redis.id

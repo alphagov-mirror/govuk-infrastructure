@@ -74,4 +74,13 @@ variable "router_mongodb_host" {
   type        = string
 }
 
+variable "signon_db_url" {
+  description = "URL for the signon database (defined outside this Terraform repo)."
+  type        = string
+}
+
+variable "signon_test_db_url" {
+  description = "URL for the signon_test database (defined outside this Terraform repo)."
+  type        = string
+}
 # TODO: pull common vars up from the app modules into here so that they can vary by environment.
