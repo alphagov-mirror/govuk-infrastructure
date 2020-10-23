@@ -19,8 +19,8 @@ provider "aws" {
 }
 
 module "task_definition" {
-  source = "../../../../modules/task-definitions/frontend"
-
+  source                           = "../../../../modules/task-definitions/frontend"
+  service_name                     = "frontend"
   asset_host                       = local.asset_host
   execution_role_arn               = data.aws_iam_role.execution.arn
   govuk_website_root               = local.govuk_website_root
