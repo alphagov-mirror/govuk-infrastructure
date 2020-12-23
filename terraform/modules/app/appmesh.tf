@@ -1,5 +1,5 @@
 resource "aws_appmesh_virtual_service" "service" {
-  count     = length(local.container_services)
+  count     = var.mesh_name == null || var.service_discovery_namespace_name == null ? 0 : length(local.container_services)
   name      = "${local.container_services[count.index].container_service}.${var.service_discovery_namespace_name}"
   mesh_name = var.mesh_name
 
@@ -13,7 +13,7 @@ resource "aws_appmesh_virtual_service" "service" {
 }
 
 resource "aws_appmesh_virtual_node" "service" {
-  count     = length(local.container_services)
+  count     = var.mesh_name == null || var.service_discovery_namespace_name == null ? 0 : length(local.container_services)
   name      = local.container_services[count.index].container_service
   mesh_name = var.mesh_name
 

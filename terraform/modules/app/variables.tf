@@ -13,15 +13,18 @@ variable "subnets" {
 }
 
 variable "mesh_name" {
-  type = string
+  type    = string
+  default = null
 }
 
 variable "service_discovery_namespace_id" {
-  type = string
+  type    = string
+  default = null
 }
 
 variable "service_discovery_namespace_name" {
-  type = string
+  type    = string
+  default = null
 }
 
 variable "service_name" {
@@ -32,7 +35,7 @@ variable "service_name" {
 variable "custom_container_services" {
   description = "list of services in map format {container_service, port, protocol} that an app container exposes."
   type        = list
-  default     = []
+  default     = null
 }
 
 variable "extra_security_groups" {
