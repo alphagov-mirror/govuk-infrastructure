@@ -190,13 +190,14 @@ jobs:
 
   - name: deploy-frontend
     plan:
-    - get: govuk-infrastructure
-      passed:
-      - run-terraform
-      trigger: true
-    - get: release
-      resource: frontend
-      trigger: true
+    - in_parallel:
+      - get: govuk-infrastructure
+        passed:
+        - run-terraform
+        trigger: true
+      - get: release
+        resource: frontend
+        trigger: true
     - task: update-task-definition
       file: govuk-infrastructure/concourse/tasks/update-task-definition.yml
       params:
@@ -232,13 +233,14 @@ jobs:
 
   - name: deploy-draft-frontend
     plan:
-    - get: govuk-infrastructure
-      passed:
-      - run-terraform
-      trigger: true
-    - get: release
-      resource: frontend
-      trigger: true
+    - in_parallel:
+      - get: govuk-infrastructure
+        passed:
+        - run-terraform
+        trigger: true
+      - get: release
+        resource: frontend
+        trigger: true
     - task: update-task-definition
       file: govuk-infrastructure/concourse/tasks/update-task-definition.yml
       params:
@@ -263,13 +265,14 @@ jobs:
 
   - name: deploy-publisher
     plan:
-    - get: govuk-infrastructure
-      passed:
-      - run-terraform
-      trigger: true
-    - get: release
-      resource: publisher
-      trigger: true
+    - in_parallel:
+      - get: govuk-infrastructure
+        passed:
+        - run-terraform
+        trigger: true
+      - get: release
+        resource: publisher
+        trigger: true
     - in_parallel:
       - task: update-web-task-definition
         file: govuk-infrastructure/concourse/tasks/update-task-definition.yml
@@ -314,13 +317,14 @@ jobs:
 
   - name: deploy-publishing-api
     plan:
-    - get: govuk-infrastructure
-      passed:
-      - run-terraform
-      trigger: true
-    - get: release
-      resource: publishing-api
-      trigger: true
+    - in_parallel:
+      - get: govuk-infrastructure
+        passed:
+        - run-terraform
+        trigger: true
+      - get: release
+        resource: publishing-api
+        trigger: true
     - in_parallel:
       - task: update-web-task-definition
         file: govuk-infrastructure/concourse/tasks/update-task-definition.yml
@@ -353,13 +357,14 @@ jobs:
 
   - name: deploy-content-store
     plan:
-    - get: govuk-infrastructure
-      passed:
-      - run-terraform
-      trigger: true
-    - get: release
-      resource: content-store
-      trigger: true
+    - in_parallel:
+      - get: govuk-infrastructure
+        passed:
+        - run-terraform
+        trigger: true
+      - get: release
+        resource: content-store
+        trigger: true
     - task: update-task-definition
       file: govuk-infrastructure/concourse/tasks/update-task-definition.yml
       params:
@@ -378,13 +383,14 @@ jobs:
 
   - name: deploy-draft-content-store
     plan:
-    - get: govuk-infrastructure
-      passed:
-      - run-terraform
-      trigger: true
-    - get: release
-      resource: content-store
-      trigger: true
+    - in_parallel:
+      - get: govuk-infrastructure
+        passed:
+        - run-terraform
+        trigger: true
+      - get: release
+        resource: content-store
+        trigger: true
     - task: update-task-definition
       file: govuk-infrastructure/concourse/tasks/update-task-definition.yml
       params:
@@ -403,13 +409,14 @@ jobs:
 
   - name: deploy-router
     plan:
-    - get: govuk-infrastructure
-      passed:
-      - run-terraform
-      trigger: true
-    - get: release
-      resource: router
-      trigger: true
+    - in_parallel:
+      - get: govuk-infrastructure
+        passed:
+        - run-terraform
+        trigger: true
+      - get: release
+        resource: router
+        trigger: true
     - task: update-task-definition
       file: govuk-infrastructure/concourse/tasks/update-task-definition.yml
       params:
@@ -426,13 +433,14 @@ jobs:
 
   - name: deploy-draft-router
     plan:
-    - get: govuk-infrastructure
-      passed:
-      - run-terraform
-      trigger: true
-    - get: release
-      resource: router
-      trigger: true
+    - in_parallel:
+      - get: govuk-infrastructure
+        passed:
+        - run-terraform
+        trigger: true
+      - get: release
+        resource: router
+        trigger: true
     - task: update-task-definition
       file: govuk-infrastructure/concourse/tasks/update-task-definition.yml
       params:
@@ -449,13 +457,14 @@ jobs:
 
   - name: deploy-router-api
     plan:
-    - get: govuk-infrastructure
-      passed:
-      - run-terraform
-      trigger: true
-    - get: release
-      resource: router-api
-      trigger: true
+    - in_parallel:
+      - get: govuk-infrastructure
+        passed:
+        - run-terraform
+        trigger: true
+      - get: release
+        resource: router-api
+        trigger: true
     - task: update-task-definition
       file: govuk-infrastructure/concourse/tasks/update-task-definition.yml
       params:
@@ -472,13 +481,14 @@ jobs:
 
   - name: deploy-draft-router-api
     plan:
-    - get: govuk-infrastructure
-      passed:
-      - run-terraform
-      trigger: true
-    - get: release
-      resource: router-api
-      trigger: true
+    - in_parallel:
+      - get: govuk-infrastructure
+        passed:
+        - run-terraform
+        trigger: true
+      - get: release
+        resource: router-api
+        trigger: true
     - task: update-task-definition
       file: govuk-infrastructure/concourse/tasks/update-task-definition.yml
       params:
@@ -495,13 +505,14 @@ jobs:
 
   - name: deploy-signon
     plan:
-    - get: govuk-infrastructure
-      passed:
-      - run-terraform
-      trigger: true
-    - get: release
-      resource: signon
-      trigger: true
+    - in_parallel:
+      - get: govuk-infrastructure
+        passed:
+        - run-terraform
+        trigger: true
+      - get: release
+        resource: signon
+        trigger: true
     - task: update-task-definition
       file: govuk-infrastructure/concourse/tasks/update-task-definition.yml
       params:
@@ -518,13 +529,14 @@ jobs:
 
   - name: deploy-static
     plan:
-    - get: govuk-infrastructure
-      passed:
-      - run-terraform
-      trigger: true
-    - get: release
-      resource: static
-      trigger: true
+    - in_parallel:
+      - get: govuk-infrastructure
+        passed:
+        - run-terraform
+        trigger: true
+      - get: release
+        resource: static
+        trigger: true
     - task: update-task-definition
       file: govuk-infrastructure/concourse/tasks/update-task-definition.yml
       params:
@@ -541,13 +553,14 @@ jobs:
 
   - name: deploy-draft-static
     plan:
-    - get: govuk-infrastructure
-      passed:
-      - run-terraform
-      trigger: true
-    - get: release
-      resource: static
-      trigger: true
+    - in_parallel:
+      - get: govuk-infrastructure
+        passed:
+        - run-terraform
+        trigger: true
+      - get: release
+        resource: static
+        trigger: true
     - task: update-task-definition
       file: govuk-infrastructure/concourse/tasks/update-task-definition.yml
       params:
