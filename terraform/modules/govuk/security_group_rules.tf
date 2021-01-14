@@ -514,5 +514,15 @@ resource "aws_security_group_rule" "statsd_from_apps_tcp" {
   source_security_group_id = aws_security_group.mesh_ecs_service.id
 }
 
+resource "aws_security_group_rule" "mesh_service_to_any_any" {
+  description       = "Mesh services send requests to anywhere over any protocol"
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = -1
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.mesh_ecs_service.id
+}
+
 # TODO: move the rest of the rules into this file unless there's a good reason
 #       for them to stay in other files.
