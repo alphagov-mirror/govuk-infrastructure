@@ -5,7 +5,7 @@ resources:
   - icon: github
     name: govuk-infrastructure
     source:
-      branch: main
+      branch: monitoring_concourse
       uri: https://github.com/alphagov/govuk-infrastructure
     type: git
 
@@ -223,7 +223,7 @@ jobs:
 
             terraform init -backend-config "role_arn=$ASSUME_ROLE_ARN"
 
-            if ! terraform_apply; do
+            if ! terraform_apply; then
                 # See bug https://github.com/grafana/terraform-provider-grafana/issues/129
                 # where terraform does not recreate some grafana resources if not found
 
@@ -232,4 +232,4 @@ jobs:
 
                 echo "applying terraform again"
                 terraform_apply
-            done
+            fi
