@@ -17,21 +17,15 @@ groups:
       - deploy-grafana
       - configure-grafana
 
-  - name: terraform
+  - name: monitoring-infra
     jobs:
       - deploy-monitoring-infra
+      - deploy-grafana
+      - configure-grafana
 
   - name: admin
     jobs:
       - update-pipeline
-
-  - name: deploy-grafana
-    jobs:
-      - deploy-grafana
-
-  - name: configure-grafana
-    jobs:
-      - configure-grafana
 
 jobs:
   - name: update-pipeline
