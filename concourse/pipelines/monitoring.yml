@@ -5,7 +5,7 @@ resources:
   - icon: github
     name: govuk-infrastructure
     source:
-      branch: main
+      branch: monitoring_concourse
       uri: https://github.com/alphagov/govuk-infrastructure
     type: git
 
@@ -194,8 +194,6 @@ jobs:
         inputs:
         - name: govuk-infrastructure
           path: src
-        outputs:
-        - name: terraform-outputs
         params:
           AWS_REGION: eu-west-1
           ASSUME_ROLE_ARN: 'arn:aws:iam::430354129336:role/govuk-concourse-deployer'
@@ -215,65 +213,23 @@ jobs:
             set -eu
 
             root_dir=$(pwd)
-            echo "${root_dir}"
-
-            INFRA_DIR="${root_dir}/src/terraform/deployments/monitoring-test/infra"
-            cd ${INFRA_DIR}
-            terraform init -backend-config "role_arn=$ASSUME_ROLE_ARN"
-            grafana_fqdn=$(terraform output grafana_fqdn)
-            echo "Grafana base URL: https://${grafana_fqdn}"
-
-            wait_url() {
-              max_retries=10
-              retries_count=0
-              sleep_period=5
-
-              while true ; do
-                  echo "checking if HTTP status code $1 is 200..."
-                  if wget --timeout 2 --server-response $1 2>&1 >/dev/null | awk '/^  HTTP/{print $2}' | grep -q "200" ; then
-                    echo "HTTP status code for $1 is 200"
-                    return
-                  fi
-
-                  retries_count=$((retries_count+1))
-
-                  if [ $retries_count -ge $max_retries ]; then
-                    echo "final HTTP code is not 200 for $1"
-                    exit 1
-                  fi
-
-                  sleep_duration=$((retries_count * sleep_period))
-                  echo "HTTP code is not 200, sleeping for ${sleep_duration}s before new check..."
-                  sleep ${sleep_duration}
-              done;
-            }
-
-            wait_url https://${grafana_fqdn}
 
             APP_DIR="${root_dir}/src/terraform/deployments/monitoring-test/grafana/app-config"
             cd ${APP_DIR}
 
             terraform_apply() {
-              # sed is used here to filter out the ansi colors in the text stream
-              terraform apply -var "assume_role_arn=$ASSUME_ROLE_ARN" -auto-approve 2>&1 \
-                | sed 's/\x1b\[[0-9;]*m//g' \
-                | tee $root_dir/terraform-outputs/grafana_config_terraform_results
+              terraform apply -var "assume_role_arn=$ASSUME_ROLE_ARN" -auto-approve
             }
 
-            terraform init -backend-config "role_arn=$ASSUME_ROLE_ARN" -reconfigure
-            (terraform_apply) || true
+            terraform init -backend-config "role_arn=$ASSUME_ROLE_ARN"
 
-            # See bug https://github.com/grafana/terraform-provider-grafana/issues/129
-            # where terraform does not recreate some grafana resources if not found
-            if grep -q 'Error: status: 404, body: {"message":"Data source not found"}' "${root_dir}/terraform-outputs/grafana_config_terraform_results"; then
+            if ! terraform_apply {
+                # See bug https://github.com/grafana/terraform-provider-grafana/issues/129
+                # where terraform does not recreate some grafana resources if not found
 
-              echo "fixing terraform state bug by removing state"
-              terraform state rm module.grafana-app-config.grafana_data_source.cloudwatch
+                echo "fixing terraform state bug by removing state"
+                terraform state rm module.grafana-app-config.grafana_data_source.cloudwatch
 
-              echo "applying terraform again"
-              terraform_apply
-
-            elif grep -q "Error: " $root_dir/terraform-outputs/grafana_config_terraform_results; then
-               echo "an error has occurred during terraform apply to configure grafana"
-               exit 1
-            fi
+                echo "applying terraform again"
+                terraform_apply
+            }
