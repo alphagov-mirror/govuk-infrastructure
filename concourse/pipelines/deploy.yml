@@ -132,15 +132,14 @@ resources:
       uri: https://github.com/alphagov/smokey
       tag_filter: "*-release"
 
-  - <<: *git-repo
-    name: govuk-infrastructure-smokey
+  - name: smokey-terraform-outputs
+    type: s3
+    icon: file
     source:
-      <<: *govuk-infrastructure-source
-      paths:
-        - concourse/tasks
-        - terraform/deployments/apps/smokey
-        - terraform/modules/app-container-definition
-        - terraform/modules/envoy-configuration
+      bucket: ((readonly_private_bucket_name))
+      region_name: eu-west-2
+      versioned_file: smokey.json
+      initial_version: "0"
 
   - <<: *git-repo
     name: static
@@ -289,6 +288,7 @@ jobs:
       - get: content-store-terraform-outputs
       - get: publisher-terraform-outputs
       - get: signon-terraform-outputs
+      - get: smokey-terraform-outputs
     - task: terraform-apply
       config:
         inputs:
@@ -302,6 +302,9 @@ jobs:
         - name: signon-terraform-outputs
           path: old-signon-terraform-outputs
           optional: true
+        - name: smokey-terraform-outputs
+          path: old-smokey-terraform-outputs
+          optional: true
         outputs:
         - name: govuk-terraform-outputs
         - name: content-store-terraform-outputs
@@ -310,6 +313,8 @@ jobs:
           path: new-publisher-terraform-outputs
         - name: signon-terraform-outputs
           path: new-signon-terraform-outputs
+        - name: smokey-terraform-outputs
+          path: new-smokey-terraform-outputs
         params:
           AWS_REGION: eu-west-1
           ASSUME_ROLE_ARN: 'arn:aws:iam::430354129336:role/govuk-concourse-deployer'
@@ -358,6 +363,7 @@ jobs:
             update_terraform_outputs content-store
             update_terraform_outputs publisher
             update_terraform_outputs signon
+            update_terraform_outputs smokey
 
     - put: govuk-terraform-outputs
       params:
@@ -375,6 +381,10 @@ jobs:
           put: signon-terraform-outputs
           params:
             file: signon-terraform-outputs/signon.json
+      - try:
+          put: smokey-terraform-outputs
+          params:
+            file: smokey-terraform-outputs/smokey.json
 
   - name: deploy-frontend
     plan:
@@ -410,6 +420,7 @@ jobs:
         text: |
           :red_circle: Failed build: http://cd.gds-reliability.engineering/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
+  # TODO: Fix me
   - name: smoke-test-frontend
     plan:
     - get: govuk-infrastructure
@@ -752,9 +763,10 @@ jobs:
     plan:
     - in_parallel:
       - get: govuk-infrastructure
-        resource: govuk-infrastructure-smokey
+        resource: govuk-infrastructure-concourse-tasks
         trigger: true
-      - get: govuk-terraform-outputs
+      - get: app-terraform-outputs
+        resource: smokey-terraform-outputs
         passed:
         - run-terraform
         trigger: true
@@ -762,7 +774,7 @@ jobs:
         resource: smokey
         trigger: true
     - task: update-task-definition
-      file: govuk-infrastructure/concourse/tasks/update-task-definition.yml
+      file: govuk-infrastructure/concourse/tasks/update-task-definition-v2.yml
       params:
         APPLICATION: smokey
         GOVUK_ENVIRONMENT: test
