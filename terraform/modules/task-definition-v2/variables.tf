@@ -1,7 +1,26 @@
 variable "container_definitions" {
-  type        = list
-  description = "Container definitions as output from container-definition module."
+  type = list
 }
+
+# variable "container_definitions" {
+#   type        = list(object({
+#     name = string
+#     command = list(string)
+#     essential = bool
+#     environment = list(map(string))
+#     dependsOn = list(map(string))
+#     image = string
+#     logConfiguration = object({
+#       logDriver = string
+#       options = map(string)
+#     })
+#     mountPoints = list(any)
+#     portMappings = list(map(string))
+#     secrets = list(map(string))
+#     user = string
+#   }))
+#   description = "Container definitions as output from container-definition module."
+# }
 
 variable "cpu" {
   type = string

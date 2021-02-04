@@ -1,7 +1,8 @@
-output "cli_input_json" {
-  # Merging with empty Map to remove null values.
-  value = merge({
-    containerDefinitions    = var.container_definitions,
+locals {
+  definition = {
+    containerDefinitions    = [
+      for definition in var.container_definitions: {for key, value in definition: key => value if value != null}
+    ],
     cpu                     = var.cpu,
     executionRoleArn        = var.execution_role_arn,
     family                  = var.family,
@@ -10,5 +11,9 @@ output "cli_input_json" {
     proxyConfiguration      = var.proxy_configuration
     requiresCompatibilities = ["FARGATE"],
     taskRoleArn             = var.task_role_arn,
-  }, {})
+  }
+}
+
+output "cli_input_json" {
+  value = {for key, value in local.definition: "${key}" => value if value != null}
 }
