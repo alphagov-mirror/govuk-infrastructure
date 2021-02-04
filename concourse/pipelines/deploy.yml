@@ -420,7 +420,6 @@ jobs:
         text: |
           :red_circle: Failed build: http://cd.gds-reliability.engineering/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
-  # TODO: Fix me
   - name: smoke-test-frontend
     plan:
     - get: govuk-infrastructure
@@ -433,6 +432,7 @@ jobs:
       params:
         APPLICATION: smokey
         GOVUK_ENVIRONMENT: test
+        VARIANT: default
     - task: run-smoke-tests
       file: govuk-infrastructure/concourse/tasks/run-task.yml
       params:
