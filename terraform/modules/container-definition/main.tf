@@ -1,5 +1,6 @@
 output "json_format" {
-  value = {
+  # Merging with empty Map to remove null values.
+  value = merge({
     name        = var.name,
     command     = var.command,
     essential   = true,
@@ -19,5 +20,5 @@ output "json_format" {
     portMappings = [for port in var.ports : { containerPort = port, hostPort = port, protocol = "tcp" }],
     secrets      = [for key, value in var.secrets_from_arns : { name = key, valueFrom = value }]
     user         = var.user
-  }
+  }, {})
 }

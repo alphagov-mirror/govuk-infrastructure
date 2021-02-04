@@ -1,5 +1,6 @@
 output "cli_input_json" {
-  value = {
+  # Merging with empty Map to remove null values.
+  value = merge({
     containerDefinitions    = var.container_definitions,
     cpu                     = var.cpu,
     executionRoleArn        = var.execution_role_arn,
@@ -9,5 +10,5 @@ output "cli_input_json" {
     proxyConfiguration      = var.proxy_configuration
     requiresCompatibilities = ["FARGATE"],
     taskRoleArn             = var.task_role_arn,
-  }
+  }, {})
 }
