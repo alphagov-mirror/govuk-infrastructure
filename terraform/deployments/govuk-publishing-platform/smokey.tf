@@ -24,6 +24,7 @@ module "smokey_container_definition" {
     AUTH_USERNAME = data.aws_secretsmanager_secret.smokey_auth_username.arn
     AUTH_PASSWORD = data.aws_secretsmanager_secret.smokey_auth_password.arn
   }
+  ports = []
 }
 
 module "smokey_task_definition" {
