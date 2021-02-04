@@ -778,6 +778,7 @@ jobs:
       params:
         APPLICATION: smokey
         GOVUK_ENVIRONMENT: test
+        VARIANT: default
     serial: true
     on_failure:
       <<: *notify-slack-failure
