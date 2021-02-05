@@ -430,9 +430,6 @@ jobs:
         trigger: true
       - get: app-terraform-outputs
         resource: smokey-terraform-outputs
-        passed:
-        - deploy-content-store
-        trigger: true
     - task: fetch-smokey-task-definition
       file: govuk-infrastructure/concourse/tasks/fetch-task-definition.yml
       params:
