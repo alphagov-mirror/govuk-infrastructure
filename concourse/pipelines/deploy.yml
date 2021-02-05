@@ -429,7 +429,7 @@ jobs:
         - deploy-content-store
         trigger: true
       - get: app-terraform-outputs
-        resource: content-store-terraform-outputs
+        resource: smokey-terraform-outputs
         passed:
         - deploy-content-store
         trigger: true
