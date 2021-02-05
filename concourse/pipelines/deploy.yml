@@ -433,7 +433,7 @@ jobs:
         passed:
         - deploy-content-store
         trigger: true
-    - task: fetch-smoke-tests
+    - task: fetch-smokey-task-definition
       file: govuk-infrastructure/concourse/tasks/fetch-task-definition.yml
       params:
         APPLICATION: smokey
@@ -441,6 +441,7 @@ jobs:
       file: govuk-infrastructure/concourse/tasks/run-task.yml
       params:
         APPLICATION: smokey
+        VARIANT: default
         COMMAND: bundle exec cucumber --profile test --strict-undefined -t @replatforming -t \"not @notreplatforming\"
 
   - name: deploy-draft-frontend
