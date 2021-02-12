@@ -95,7 +95,13 @@ module "draft_frontend" {
     target_group_arn = module.draft_frontend_public_alb.target_group_arn
     container_port   = 80
   }]
-  environment_variables = local.frontend_defaults.environment_variables
+  environment_variables = merge(
+    local.frontend_defaults.environment_variables,
+    {
+      PLEK_SERVICE_CONTENT_STORE_URI    = local.defaults.draft_content_store_uri,
+      PLEK_SERVICE_STATIC_URI           = local.defaults.static_uri
+    }
+  )
   secrets_from_arns     = local.frontend_defaults.secrets_from_arns
   log_group             = local.log_group
   aws_region            = data.aws_region.current.name
