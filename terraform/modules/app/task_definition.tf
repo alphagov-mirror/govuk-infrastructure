@@ -101,10 +101,6 @@ resource "aws_ecs_task_definition" "bootstrap" {
     container_name = "envoy"
     properties     = local.envoy_proxy_properties
   }
-
-  lifecycle {
-    ignore_changes = all
-  }
 }
 
 output "cli_input_json" {
