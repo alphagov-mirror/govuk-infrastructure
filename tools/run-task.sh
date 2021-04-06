@@ -12,6 +12,7 @@ OPTIND=1 # Reset in case getopts has been used previously in the shell.
 
 cluster="task_runner"
 govuk_env="test"
+workspace_cluster="govuk-ecs" # TODO: Export cluster name from govuk deployment
 
 function show_help {
   echo "Usage: cd govuk-infrastructure && gds aws govuk-test-poweruser ./tools/run-rake-task -a frontend -v live rake db:migrate"
@@ -52,7 +53,7 @@ root_dir="${PWD}"
 env_dir="$root_dir/terraform/deployments/govuk-publishing-platform"
 
 echo "Fetching task_definition_arn from the govuk ECS cluster"
-task_definition_arn=$(aws --region eu-west-1 ecs describe-services --cluster govuk --service "${application}-${variant}" | jq -r '.services[0].taskDefinition')
+task_definition_arn=$(aws --region eu-west-1 ecs describe-services --cluster $workspace_cluster --service "${application}-${variant}" | jq -r '.services[0].taskDefinition')
 
 echo "Fetching network_config from Terraform statefile in $env_dir"
 cd ${env_dir}
@@ -86,7 +87,7 @@ echo "View task: https://eu-west-1.console.aws.amazon.com/ecs/home?region=eu-wes
 echo "Tailing logs..."
 echo ""
 
-(aws --region eu-west-1 logs tail govuk --follow | grep "${application}-${variant}/app/${task_id}")&
+(aws --region eu-west-1 logs tail $cluster --follow | grep "${application}-${variant}/app/${task_id}")&
 
 aws ecs wait tasks-stopped --tasks="[\"$task_arn\"]" --cluster $cluster
 
