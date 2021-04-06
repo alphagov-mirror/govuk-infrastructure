@@ -8,7 +8,7 @@ module "www_origin" {
   certificate               = aws_acm_certificate.workspace_public.arn
   publishing_service_domain = var.publishing_service_domain
   workspace                 = local.workspace
-  external_cidrs_list       = concat(var.office_cidrs_list, data.fastly_ip_ranges.fastly.cidr_blocks)
+  cidrs_allowlist           = concat(var.office_cidrs_list, data.fastly_ip_ranges.fastly.cidr_blocks)
 
   apps_security_config_list = {
     "frontend" = { security_group_id = module.frontend.security_group_id, target_port = 80 },
@@ -26,7 +26,7 @@ module "draft_origin" {
   certificate               = aws_acm_certificate.workspace_public.arn
   publishing_service_domain = var.publishing_service_domain
   workspace                 = local.workspace
-  external_cidrs_list       = concat(var.office_cidrs_list, data.fastly_ip_ranges.fastly.cidr_blocks)
+  cidrs_allowlist           = concat(var.office_cidrs_list, data.fastly_ip_ranges.fastly.cidr_blocks)
   live                      = false
 
   apps_security_config_list = {
